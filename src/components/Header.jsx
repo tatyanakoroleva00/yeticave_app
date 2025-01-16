@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 
-const Header = (props) => {
+const Header = () => {
   const [searchInput, setSearchInput] = useState('');
   return (
     <header className="main-header">
@@ -19,7 +19,7 @@ const Header = (props) => {
 
              {/* <?php if (isset($_SESSION['user'])) : ?> */}
             
-            <div><a className="main-header__add-lot button" onClick={props.navigateToAdd}>Добавить лот</a></div>
+            <div><a className="main-header__add-lot button" href="/add">Добавить лот</a></div>
             
             {/* <? endif; ?>  */}
             {/* <nav className="user-menu">
