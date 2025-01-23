@@ -1,8 +1,11 @@
 import React from 'react';
 import { useState } from 'react';
 
-const Header = () => {
+const Header = ({user}) => {
   const [searchInput, setSearchInput] = useState('');
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+  };
   return (
     <header className="main-header">
         <div className="main-header__container container">
@@ -14,40 +17,33 @@ const Header = () => {
                 <input type="search" className="search" placeholder="Поиск лота" value={searchInput} onChange={(event) => setSearchInput(event.target.value)}/>
                 <input className="main-header__search-btn" type="submit" name="find" value="Найти"/>
             </form>
+            {!user && 
+            <div><a className="main-header__add-lot button" href="/add">Добавить лот</a></div>}
 
-
-
-             {/* <?php if (isset($_SESSION['user'])) : ?> */}
-            
-            <div><a className="main-header__add-lot button" href="/add">Добавить лот</a></div>
-            
-            {/* <? endif; ?>  */}
-            {/* <nav className="user-menu">
-
-                <?php if (isset($_SESSION['user'])) : ?>
-
+            <nav className="user-menu">
+               {user && (
+                <>
                     <div className="user-menu__image">
-                        <img src='<?=$_SESSION['user']['avatar'] ?? 'img/avatar.jpg'?>' width="40" height="40" alt="Аватар"/>
+                        <img src='src/components/avatar.jpg' width="40" height="40" alt="Аватар"/>
                     </div>
                     <div className="user-menu__logged">
-                        <p><?= $_SESSION['user']['name'] ?? 'Неизвестный'?></p>
-                        <p><a href="../controllers/logout.php">Выйти</a></p>
+
+                        <p>{user ?? 'Неизвестный'}</p>
+                        <p><a href="/" onClick={handleLogout}>Выйти</a></p>
                     </div>
+                </>)}
 
-                <?php else: ?>
-
+                {!user &&
                     <ul className="user-menu__list">
                         <li className="user-menu__item">
-                            <a href="sign_up.php">Регистрация</a>
+                            <a href="/signup">Регистрация</a>
                         </li>
                         <li className="user-menu__item">
-                            <a href="login.php">Вход</a>
+                            <a  href="/login">Вход</a>
                         </li>
                     </ul>
-                <? endif; ?>
-
-            </nav> */}
-
+                }
+            </nav>
         </div>
     </header>
   )
