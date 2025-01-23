@@ -1,6 +1,5 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import HomePage from "./components/HomePage";
 import Add from "./pages/Add";
@@ -17,9 +16,10 @@ function App() {
       setUser(user);
     }
   }, []);
-   const handleLogin = (userData) => {
-    setUser(userData);
-  };
+
+  const handleLogin = (userdata) => {
+    setUser(userdata);
+  }
   return (
     <Router>
       <Layout user={user} setUser={setUser}>

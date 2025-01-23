@@ -4,6 +4,7 @@ import { useState } from 'react';
 const Header = ({user}) => {
   const [searchInput, setSearchInput] = useState('');
   const handleLogout = () => {
+    localStorage.removeItem('auth');
     localStorage.removeItem('user');
   };
   return (
@@ -28,7 +29,7 @@ const Header = ({user}) => {
                     </div>
                     <div className="user-menu__logged">
 
-                        <p>{user ?? 'Неизвестный'}</p>
+                        <p>{user || 'Неизвестный'}</p>
                         <p><a href="/" onClick={handleLogout}>Выйти</a></p>
                     </div>
                 </>)}
