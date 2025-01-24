@@ -16,8 +16,7 @@ const Login = ({ onLogin }) => {
       });
       let data = response.data;
       if (data.status === 'success') {
-        localStorage.setItem('auth', JSON.stringify(data.user));
-        localStorage.setItem('user', JSON.stringify(data.user['name']));
+        localStorage.setItem('user', JSON.stringify(data.user));
         onLogin(data);
         window.location.href = '/';
       } else {
@@ -26,20 +25,19 @@ const Login = ({ onLogin }) => {
     } catch (error) {
       console.log('There is an error:', error);
     }
-  }
-
+  };
 
   return (
     <form className="form container" method="post" onSubmit={handleSubmit}>
       {errors.message && <span class="form__error" >{errors.message}</span>}
       <h2>Вход</h2>
       <div className="form__item">
-        <label for="email">E-mail <sup>*</sup></label>
+        <label htmlFor="email">E-mail <sup>*</sup></label>
         <input id="email" type="text" name="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Введите e-mail" />
         {errors.email && <span class="form__error">{errors.email}</span>}
       </div>
       <div className="form__item">
-        <label for="password">Пароль <sup>*</sup></label>
+        <label htmlFor="password">Пароль <sup>*</sup></label>
         <input id="password" type="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Введите пароль" />
         {errors.password && <span class="form__error">{errors.password}</span>}
 
