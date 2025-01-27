@@ -2,15 +2,16 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import Lot from "./Lot";
 const HomePage = ({ user }) => {
     const [categories, setCategories] = useState(null);
-    const [auctionFinishOrder, setAuctionFinishOrder] = useState('asc');
-    const [publicationOrder, setPublicationOrder] = useState('asc');
     const [lotsStatus, setLotsStatus] = useState('Открытые');
     const [minPrice, setMinPrice] = useState(0);
     const [maxPrice, setMaxPrice] = useState(0);
     const [lots, setLots] = useState([]);
-    const [param, setParam] = useState('new');
+    const [show, setShow] = useState('new');
+    const [auctionFinishOrder, setAuctionFinishOrder] = useState('asc');
+    const [publicationOrder, setPublicationOrder] = useState('asc');
 
     // Determine the next order
     const nextAuctionFinishOrder = auctionFinishOrder === 'asc' ? 'desc' : 'asc';
@@ -24,10 +25,11 @@ const HomePage = ({ user }) => {
             .then(({ data }) => setCategories(data.flat()))
     }, []);
 
+    // Show "new lots" when page is loaded for the first time
     useEffect(() => {
         axios.post('/api/new_lots.php', {
             'show': 'new',
-            'order' : auctionFinishOrder,
+            'order': auctionFinishOrder,
         })
             .then(response => {
                 let requestedLots = rangeLots(response.data);
@@ -35,41 +37,48 @@ const HomePage = ({ user }) => {
             })
     }, [])
 
-    // Button clicks
-    const clickHandler = () => {
-        window.location.href = '/history';
-    };
-
     // Переключение между "открытыми" и "закрытыми" лотами
-    const handleOpenClick = async (e, param) => {
+    const handleOpenClick = async (e, show) => {
         e.preventDefault();
-        setParam(param);
+        setShow(show);
         await axios.post('/api/new_lots.php', {
-            'show': param,
-            'order' : auctionFinishOrder,
+            'show': show,
+            'order': auctionFinishOrder,
         })
             .then(response => {
                 let requestedLots = rangeLots(response.data);
                 setLots(requestedLots);
             })
     };
-    
+
     // Переключение между лотами по дате истечения срока лота
-    const handleButtonClickAuctionDate = async (e, param) => {
+    const handleButtonClickAuctionDate = async (e, show) => {
         e.preventDefault();
         setAuctionFinishOrder(nextAuctionFinishOrder);
         await axios.post('/api/new_lots.php', {
-            'show' : param, 
-            'order' : nextAuctionFinishOrder,
+            'show': show,
+            'order': nextAuctionFinishOrder,
         })
-        .then(response => {
-            let requestedLots = rangeLots(response.data);
-            setLots(requestedLots);
-        })
+            .then(response => {
+                let requestedLots = rangeLots(response.data);
+                setLots(requestedLots);
+            })
     };
-    const handleButtonClickPublicationDate = () => {
+
+    const handleButtonClickPublicationDate = async (e, show) => {
+        e.preventDefault();
         setPublicationOrder(nextPublicationOrder);
+        await axios.post('/api/new_lots.php', {
+            'show': show,
+            'publicationOrder': nextPublicationOrder,
+        })
+            .then(response => {
+                let requestedLots = rangeLots(response.data);
+                setLots(requestedLots);
+            })
     };
+
+    // Function - ranging received from the server date - adding keys to values
     function rangeLots(incomeData) {
         return incomeData.map((data) => ({
             id: data[0],
@@ -86,11 +95,17 @@ const HomePage = ({ user }) => {
             created_at: data[11]
         }));
     }
-    // Refresh prices
-    const handleRefreshPage = () => {
+    // Refresh prices on reset button 
+    const handleReset = () => {
         setMinPrice(0);
         setMaxPrice(0);
     };
+
+    // Button clicks
+    const clickHandler = () => {
+        window.location.href = '/history';
+    };
+
 
     return (
         <section className="promo">
@@ -107,15 +122,15 @@ const HomePage = ({ user }) => {
             <br />
             <div>
                 {user && <button onClick={clickHandler}>Просмотренные лоты</button>}
-                <button onClick={(e) => {handleOpenClick(e, 'new'); setLotsStatus('Открытые')}}>Открытые лоты</button>
-                <button onClick={(e) => {handleOpenClick(e, 'old'); setLotsStatus('Закрытые')}}>Закрытые лоты</button>
+                <button onClick={(e) => { handleOpenClick(e, 'new'); setLotsStatus('Открытые') }}>Открытые лоты</button>
+                <button onClick={(e) => { handleOpenClick(e, 'old'); setLotsStatus('Закрытые') }}>Закрытые лоты</button>
             </div>
             <div>
-                <button onClick={(e) => handleButtonClickAuctionDate(e, param)} className={classNameAuction}>
+                <button onClick={(e) => handleButtonClickAuctionDate(e, show)} className={classNameAuction}>
                     Окончание аукциона {auctionFinishOrder === 'desc' ? "с начала" : "с конца"}
                     <span className={auctionFinishOrder}></span>
                 </button>
-                <button onClick={handleButtonClickPublicationDate} className={classNamePublication}>
+                <button onClick={(e) => handleButtonClickPublicationDate(e, show)} className={classNamePublication}>
                     Дата публикации - {publicationOrder === 'desc' ? "по возрастанию" : "по убыванию"}
                     <span className={publicationOrder}></span>
                 </button>
@@ -131,37 +146,14 @@ const HomePage = ({ user }) => {
 
                 <input type="submit" value="Фильтровать" />
             </form>
-            <button onClick={handleRefreshPage}>Сбросить</button>
-
+            <button onClick={handleReset}>Сбросить</button>
 
             <section className="lots">
                 <div className="lots__header">
                     <h2>{lotsStatus}</h2>
                 </div>
 
-                {/* {/* <?php if(isset($search_array)) :?> */}
-                <ul className="lots__list">
-                    {lots && lots.map((lot, index) => (
-                        <li key={index} className="lots__item lot">
-                            <div className="lot__image">
-                                <img src={lot['img_url']} width="350" height="260" alt={lot.name} />
-                            </div>
-                            <div className="lot__info">
-                                <span className="lot__category">{lot['category_name']}</span>
-                                <h3 className="lot__title"><Link className="text-link" to=''>{lot.name}</Link></h3>
-                                <p>Описание: {lot['lot_message']}</p>
-                                <div className="lot__state">
-                                    <div className="lot__rate">
-                                        <span className="lot__amount">Стартовая цена</span>
-                                        <span className="lot__cost">{lot['cur_price']}<b className="rub">р</b></span>
-                                    </div>
-                                    <div className="lot__timer timer">{lot['lot_data']}{/* <?php echo formattedDate($elem['lot_date']);?> */}
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
+                <Lot lots={lots} />
             </section>
         </section >
     )
