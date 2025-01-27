@@ -27,6 +27,7 @@ const HomePage = ({ user }) => {
     useEffect(() => {
         axios.post('/api/new_lots.php', {
             'show': 'new',
+            'order' : auctionFinishOrder,
         })
             .then(response => {
                 let requestedLots = rangeLots(response.data);
@@ -34,13 +35,37 @@ const HomePage = ({ user }) => {
             })
     }, [])
 
-
     // Button clicks
     const clickHandler = () => {
         window.location.href = '/history';
     };
-    const handleButtonClickAuctionDate = () => {
+
+    // Переключение между "открытыми" и "закрытыми" лотами
+    const handleOpenClick = async (e, param) => {
+        e.preventDefault();
+        setParam(param);
+        await axios.post('/api/new_lots.php', {
+            'show': param,
+            'order' : auctionFinishOrder,
+        })
+            .then(response => {
+                let requestedLots = rangeLots(response.data);
+                setLots(requestedLots);
+            })
+    };
+    
+    // Переключение между лотами по дате истечения срока лота
+    const handleButtonClickAuctionDate = async (e, param) => {
+        e.preventDefault();
         setAuctionFinishOrder(nextAuctionFinishOrder);
+        await axios.post('/api/new_lots.php', {
+            'show' : param, 
+            'order' : nextAuctionFinishOrder,
+        })
+        .then(response => {
+            let requestedLots = rangeLots(response.data);
+            setLots(requestedLots);
+        })
     };
     const handleButtonClickPublicationDate = () => {
         setPublicationOrder(nextPublicationOrder);
@@ -61,18 +86,6 @@ const HomePage = ({ user }) => {
             created_at: data[11]
         }));
     }
-
-    const handleOpenClick = async (e, param) => {
-        e.preventDefault();
-        setParam(param);
-        await axios.post('/api/new_lots.php', {
-            'show': param,
-        })
-            .then(response => {
-                let requestedLots = rangeLots(response.data);
-                setLots(requestedLots);
-            })
-    };
     // Refresh prices
     const handleRefreshPage = () => {
         setMinPrice(0);
@@ -98,7 +111,7 @@ const HomePage = ({ user }) => {
                 <button onClick={(e) => {handleOpenClick(e, 'old'); setLotsStatus('Закрытые')}}>Закрытые лоты</button>
             </div>
             <div>
-                <button onClick={handleButtonClickAuctionDate} className={classNameAuction}>
+                <button onClick={(e) => handleButtonClickAuctionDate(e, param)} className={classNameAuction}>
                     Окончание аукциона {auctionFinishOrder === 'desc' ? "с начала" : "с конца"}
                     <span className={auctionFinishOrder}></span>
                 </button>

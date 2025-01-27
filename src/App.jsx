@@ -19,7 +19,6 @@ function App() {
   const handleLogin = (userdata) => {
     setUser(userdata);
   };
-  console.log(user);
   return (
     <Router>
       <Layout user={user} setUser={setUser}>
