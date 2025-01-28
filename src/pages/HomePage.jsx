@@ -10,6 +10,7 @@ const HomePage = ({ user }) => {
     const [maxPrice, setMaxPrice] = useState(0);
     const [lots, setLots] = useState([]);
     const [show, setShow] = useState('new');
+    const [message, setMessage] = useState([]);
     const [auctionFinishOrder, setAuctionFinishOrder] = useState('asc');
     const [publicationOrder, setPublicationOrder] = useState('asc');
 
@@ -78,6 +79,26 @@ const HomePage = ({ user }) => {
             })
     };
 
+    const handleFilteringByPrice = async(e) => {
+        e.preventDefault();
+        await axios.post('/api/new_lots.php', {
+            'min_price' : minPrice, 
+            'max_price': maxPrice, 
+            'show' : show,
+        })
+        .then(response => {
+            let requestedLots = response.data;
+            if(requestedLots.length === 0) {
+                setMessage('Nothing is found');
+                setLots([]);
+
+            } else {
+                requestedLots = rangeLots(requestedLots);
+                setLots(requestedLots);
+            }
+        })
+    };
+
     // Function - ranging received from the server date - adding keys to values
     function rangeLots(incomeData) {
         return incomeData.map((data) => ({
@@ -137,7 +158,7 @@ const HomePage = ({ user }) => {
             </div>
             <hr />
             <h1>Фильтр лотов по цене</h1>
-            <form action="index.php" method="get">
+            <form action="/" method="post" onSubmit={handleFilteringByPrice}>
                 <label htmlFor="min_price">Минимальная цена:</label>
                 <input type="number" id="min_price" name="min_price" step="0.01" min="0" required value={minPrice} onChange={(e) => { setMinPrice(e.target.value) }} />
 
@@ -152,7 +173,7 @@ const HomePage = ({ user }) => {
                 <div className="lots__header">
                     <h2>{lotsStatus}</h2>
                 </div>
-
+                {lots.length === 0 && <b>{message}</b>}
                 <Lot lots={lots} />
             </section>
         </section >
