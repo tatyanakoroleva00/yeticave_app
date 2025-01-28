@@ -38,11 +38,11 @@ const HomePage = ({ user }) => {
     }, [])
 
     // Переключение между "открытыми" и "закрытыми" лотами
-    const handleOpenClick = async (e, show) => {
+    const handleOpenClick = async (e, option) => {
         e.preventDefault();
-        setShow(show);
+        setShow(option);
         await axios.post('/api/new_lots.php', {
-            'show': show,
+            'show': option,
             'order': auctionFinishOrder,
         })
             .then(response => {
@@ -52,11 +52,11 @@ const HomePage = ({ user }) => {
     };
 
     // Переключение между лотами по дате истечения срока лота
-    const handleButtonClickAuctionDate = async (e, show) => {
+    const handleButtonClickAuctionDate = async (e, option) => {
         e.preventDefault();
         setAuctionFinishOrder(nextAuctionFinishOrder);
         await axios.post('/api/new_lots.php', {
-            'show': show,
+            'show': option,
             'order': nextAuctionFinishOrder,
         })
             .then(response => {
@@ -65,11 +65,11 @@ const HomePage = ({ user }) => {
             })
     };
 
-    const handleButtonClickPublicationDate = async (e, show) => {
+    const handleButtonClickPublicationDate = async (e, option) => {
         e.preventDefault();
         setPublicationOrder(nextPublicationOrder);
         await axios.post('/api/new_lots.php', {
-            'show': show,
+            'show': option,
             'publicationOrder': nextPublicationOrder,
         })
             .then(response => {
