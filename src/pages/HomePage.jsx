@@ -79,24 +79,23 @@ const HomePage = ({ user }) => {
             })
     };
 
-    const handleFilteringByPrice = async(e) => {
+    const handleFilteringByPrice = async (e) => {
         e.preventDefault();
-        await axios.post('/api/new_lots.php', {
-            'min_price' : minPrice, 
-            'max_price': maxPrice, 
-            'show' : show,
-        })
-        .then(response => {
-            let requestedLots = response.data;
-            if(requestedLots.length === 0) {
-                setMessage('Nothing is found');
-                setLots([]);
-
-            } else {
-                requestedLots = rangeLots(requestedLots);
-                setLots(requestedLots);
-            }
-        })
+            await axios.post('/api/new_lots.php', {
+                'min_price': minPrice,
+                'max_price': maxPrice,
+                'show': show,
+            })
+                .then(response => {
+                    let requestedLots = response.data;
+                    if (requestedLots.length === 0) {
+                        setMessage('Nothing is found');
+                        setLots([]);
+                    } else {
+                        requestedLots = rangeLots(requestedLots);
+                        setLots(requestedLots);
+                    }
+                })
     };
 
     // Function - ranging received from the server date - adding keys to values
@@ -118,8 +117,7 @@ const HomePage = ({ user }) => {
     }
     // Refresh prices on reset button 
     const handleReset = () => {
-        setMinPrice(0);
-        setMaxPrice(0);
+        window.location.reload();
     };
 
     // Button clicks
@@ -163,7 +161,7 @@ const HomePage = ({ user }) => {
                 <input type="number" id="min_price" name="min_price" step="0.01" min="0" required value={minPrice} onChange={(e) => { setMinPrice(e.target.value) }} />
 
                 <label htmlFor="max_price">Максимальная цена:</label>
-                <input type="number" id="max_price" name="max_price" step="0.01" min="0" required value={maxPrice} onChange={(e) => { setMaxPrice(e.target.value) }} />
+                <input type="number" id="max_price" name="max_price" step="0.01" min="1" required value={maxPrice} onChange={(e) => { setMaxPrice(e.target.value) }} />
 
                 <input type="submit" value="Фильтровать" />
             </form>
