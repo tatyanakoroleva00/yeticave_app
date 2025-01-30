@@ -3,30 +3,38 @@ import { useState } from 'react';
 import axios from 'axios';
 
 const Add = () => {
-  const [lotName, setLotName] = useState('');
-  const [category, setCategory] = useState('');
-  const [lotMessage, setLotMessage] = useState('');
-  const [lotImage, setLotImage] = useState('');
-  const [lotStep, setLotStep] = useState('');
-  const [lotDate, setLotDate] = useState('');
-  const [curPrice, setCurPrice] = useState('');
-  const [errors, setErrors] = useState([]);
+  const [formValues, setFormValues] = useState({
+    lotName: '',
+    category: '',
+    lotMessage: '',
+    lotImage: '',
+    lotStep: '',
+    lotDate: '',
+    curPrice: '',
+  });
   const [preview, setPreview] = useState('');
+  const [errors, setErrors] = useState({});
 
   //Сложные классы
-  const formClass = `form form--add-lot container ${errors.length > 0 ? 'form--invalid' : ''}`;
-  const lotNameClass = `form__item ${errors.lotName === '' ? 'form__item--invalid' : ''}`;
-  const categoryClass = `form__item ${errors.category === '' ? 'form__item--invalid' : ''}`;
-  const lotMessageClass = `form__item form__item--wide ${errors.lotMessage === '' ? 'form__item--invalid' : ''}`;
-  const curPriceClass = `form__item form__item--small ${errors.curPrice === '' ? 'form__item--invalid' : ''}`;
-  const lotStepClass = `form__item form__item--small ${errors.lotStep === '' ? 'form__item--invalid' : ''}`;
-  const lotDateClass = `form__item ${errors.lotDate === '' ? 'form__item--invalid' : ''}`;
+  const formClass = `form form--add-lot container ${Object.keys(errors).length > 0 ? 'form--invalid' : ''}`;
+  const lotNameClass = `form__item ${errors.lot_name ? 'form__item--invalid' : ''}`;
+  const categoryClass = `form__item ${errors.category ? 'form__item--invalid' : ''}`;
+  const lotMessageClass = `form__item form__item--wide ${errors.lot_message ? 'form__item--invalid' : ''}`;
+  const curPriceClass = `form__item form__item--small ${errors.cur_price ? 'form__item--invalid' : ''}`;
+  const lotStepClass= `form__item form__item--small ${errors.lot_step ? 'form__item--invalid' : ''}`;
+  const lotDateClass= `form__item ${errors.lot_date ? 'form__item--invalid' : ''}`;
+
+  // Обновление данных формы
+  const handleInputChange = (e) => {
+    const {name, value} = e.target;
+    setFormValues(prevFormValues => ({...prevFormValues, [name]: value}));
+  };
 
   // Обработка выбора файла
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setLotImage(file);
+      setFormValues(prev => ({...prev, lotImage : file}));
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreview(reader.result);
@@ -35,108 +43,61 @@ const Add = () => {
     }
   };
 
-  console.log(lotImage);
-  //Отправка данных формы
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   // let formData = {
-  //   //   lot_name: lotName,
-  //   //   category: category,
-  //   //   lot_message: lotMessage,
-  //   //   img_url: lotImage,
-  //   //   lot_step: lotStep,
-  //   //   lot_date: lotDate,
-  //   //   cur_price: curPrice,
-  //   // };
-
-  //  axios.post('http://yeticave-second.loc/add1.php', formData, {
-  //   headers: {
-  //     // Заголовок 'Content-Type' устанавливать не нужно, браузер сделает это автоматически,
-  //     // добавив к нему границу (boundary)
-  //     'Content-Type': 'multipart/form-data'
-  //   }
-  // })
-  //     .then(response => {
-  //       console.log(response.data);
-  //       // const { errors, data } = response.data;
-  //       // setErrors(errors);
-  //       // console.log(data);
-  //     })
-  // };
-
+  // Отправляем данные формы на сервер
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    // Создаем экземпляр FormData
-    const formData = new FormData();
-  
-    // Добавляем данные формы
-    formData.append('lot_name', lotName);
-    formData.append('category', category);
-    formData.append('lot_message', lotMessage);
-  
-    // Предполагаем, что lotImage является файлом, выбранным пользователем
-    // Например, используя <input type="file" onChange={handleFileChange} />
-    // где handleFileChange обновляет состояние lotImage
-    if (lotImage) {
-      formData.append('img_url', lotImage, lotImage.name);
-    }
-  
-    formData.append('lot_step', lotStep);
-    formData.append('lot_date', lotDate);
-    formData.append('cur_price', curPrice);
-  
-    // Отправляем запрос
-    axios.post('http://yeticave-second.loc/add1.php', formData, {
+    setErrors({}); // Очищаем ошибки перед отправкой формы
+
+    // Подстраиваем названия переменных React под названия переменных в PHP
+    const formData = {
+      lot_name: formValues.lotName,
+      category: formValues.category,
+      lot_message: formValues.lotMessage,
+      img_url: formValues.lotImage,
+      lot_step: formValues.lotStep,
+      lot_date: formValues.lotDate,
+      cur_price: formValues.curPrice,
+    };
+
+    // Отправляем данные
+    try {
+      let response = await axios.post('http://yeticave-second.loc/add1.php', formData, {
       headers: {
-        // Заголовок 'Content-Type' устанавливать не нужно, браузер сделает это автоматически,
-        // добавив к нему границу (boundary)
         'Content-Type': 'multipart/form-data'
       }
-    })
-    .then(response => {
-      if (response.status === 200) {
-        const {data} = response;
-        // const { errors, data } = response.data;
-        // setErrors(errors);
-        console.log(data);
-      } else {
-        console.warn('Received response with status:', response.status);
-      }
-    })
-    .catch(error => {
-      console.error('Error during the request:', error);
-      // Обработка ошибок отправки формы, например, показ сообщения пользователю
     });
+      const {data, errors} = response.data;
+      if(Object.keys(errors).length > 0) {
+        setErrors(errors);
+      } else {
+        console.log('Нет ошибок');
+      }
+    } catch(error ) {
+      console.error('Error during the request:', error);
+    };
   };
-
 
   const handleRemoveFile = (e) => {
     e.preventDefault;
-    setLotImage(null);
+    setFormValues(prev => ({...prev, lotImage : null}));
     setPreview(null);
   };
-
-
-  console.log(errors);
-  console.log(lotImage);
   return (
     <>
-      <form onSubmit={handleSubmit} className={formClass} action="/add.php" method="post">
-        <span className="form__error form__error--bottom">{errors.length > 0 ? 'Пожалуйста, исправьте ошибки в форме.' : ''}</span>
+      <form onSubmit={handleSubmit} className={formClass} action="/add1.php" method="post">
+        <span className="form__error form__error--bottom">{Object.keys(errors).length > 0 ? 'Пожалуйста, исправьте ошибки в форме.' : ''}</span>
         <h2>Добавление лота</h2>
         <div className="form__container-two">
           {/* Наименование лота */}
           <div className={lotNameClass}>
             <label htmlFor="lot-name">Наименование <sup>*</sup></label>
-            <input id="lot-name" type="text" name="lot_name" value={lotName} onChange={(e) => setLotName(e.target.value)} placeholder="Введите наименование лота" />
+            <input id="lot-name" type="text" name="lotName" value={formValues.lotName} onChange={handleInputChange} placeholder="Введите наименование лота" />
             <span className="form__error">{errors['lot_name'] ? 'Введите наименование лота' : ''}</span>
           </div>
           {/* Категории */}
           <div className={categoryClass}>
             <label htmlFor="category">Категория <sup>*</sup></label>
-            <select id="category" name="category" value={category} onChange={(e) => setCategory(e.target.value)}>
+            <select id="category" name="category" value={formValues.category} onChange={handleInputChange}>
               <option value="">Выберите категорию</option>
               <option
                 value="Доски и лыжи"> Доски и лыжи </option>
@@ -159,7 +120,7 @@ const Add = () => {
         {/* Описание */}
         <div className={lotMessageClass}>
           <label htmlFor="message">Описание <sup>*</sup></label>
-          <textarea id="message" name="lot_message" placeholder="Напишите описание лота" onChange={(e) => setLotMessage(e.target.value)}>{lotMessage}</textarea>
+          <textarea id="message" name="lotMessage" placeholder="Напишите описание лота" onChange={handleInputChange}>{formValues.lotMessage}</textarea>
           <span className="form__error">{errors['lot_message'] ? 'Напишите описание лота' : ''}</span>
         </div>
         {/* Изображение */}
@@ -171,7 +132,7 @@ const Add = () => {
                 <img src={preview} alt="Загруженное изображение" width="100px " />
                 <button className="remove-button" onClick={handleRemoveFile}>УДАЛИТЬ</button>
               </>)}
-            {!preview && <input type="file" onChange={handleFileChange} id="lot_img" name="image" />}
+            {!preview && <input type="file" onChange={handleFileChange} id="lot_img" name="lotImage" />}
             <span className="form__error">{errors.img_url ?? ''}</span>
           </div>
         </div>
@@ -180,7 +141,7 @@ const Add = () => {
           <div
             className={curPriceClass}>
             <label htmlFor="lot_rate">Начальная цена <sup>*</sup></label>
-            <input id="lot_rate" type="number" min="1" step="1" value={curPrice} onChange={(e) => setCurPrice(e.target.value)} name="curPrice"
+            <input id="lot_rate" type="number" min="1" step="1" value={formValues.curPrice} onChange={handleInputChange} name="curPrice"
               placeholder="0" />
             <span
               className="form__error">{errors['cur_price'] ? 'Введите начальную цену' : ''}</span>
@@ -190,7 +151,7 @@ const Add = () => {
           <div
             className={lotStepClass}>
             <label htmlFor="lot-step">Шаг ставки <sup>*</sup></label>
-            <input id="lot-step" type="number" min="1" step="1" value={lotStep} onChange={(e) => setLotStep(e.target.value)} name="lot_step"
+            <input id="lot-step" type="number" min="1" step="1" value={formValues.lotStep} onChange={handleInputChange} name="lotStep"
               placeholder="0" />
             <span className="form__error">{errors['lot_step'] ? 'Введите шаг ставки' : ''}</span>
           </div>
@@ -198,8 +159,8 @@ const Add = () => {
           {/* Дата окончания торгов */}
           <div className={lotDateClass}>
             <label htmlFor="lot-date">Дата окончания торгов <sup>*</sup></label>
-            <input className="form__input-date" id="lot-date" value={lotDate} onChange={(e) => setLotDate(e.target.value)} type="date"
-              name="lot_date" placeholder="Введите дату в формате ГГГГ-ММ-ДД" />
+            <input className="form__input-date" id="lot-date" value={formValues.lotDate} onChange={handleInputChange} type="date"
+              name="lotDate" placeholder="Введите дату в формате ГГГГ-ММ-ДД" />
             <span
               className="form__error">{errors['lot_date'] ?? ''}</span>
           </div >
