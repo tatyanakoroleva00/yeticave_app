@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Add = () => {
   const [formValues, setFormValues] = useState({
@@ -14,6 +15,7 @@ const Add = () => {
   });
   const [preview, setPreview] = useState('');
   const [errors, setErrors] = useState({});
+  const navigate = useNavigate(); // Используем хук useNavigate
 
   //Сложные классы
   const formClass = `form form--add-lot container ${Object.keys(errors).length > 0 ? 'form--invalid' : ''}`;
@@ -66,16 +68,15 @@ const Add = () => {
         'Content-Type': 'multipart/form-data'
       }
     });
-      const {data, errors} = response.data;
+      const {errors, file, data, lotId} = response.data;
       if(errors) {
         if(Object.keys(errors).length > 0) {
         setErrors(errors);
       } 
       } else {
-        console.log('Нет ошибок');
-        window.location.href="/";
+        console.log(lotId);
+        navigate(`/show/${lotId}`);
       }
-      
     } catch(error ) {
       console.error('Error during the request:', error);
     };

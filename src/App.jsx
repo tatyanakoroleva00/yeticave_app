@@ -25,10 +25,10 @@ function App() {
       <Layout user={user} setUser={setUser}>
         <Routes>
           <Route path="/" element={<HomePage user={user}/>} />
-          <Route path="/add" element={<Add />} />
-          <Route path="/login" element={<Login onLogin={handleLogin} />}/>
-          <Route path="/signup" element={<SignUp/>}/>
-          <Route path="/show" element={<Show />} />
+          <Route path="add" element={<Add />} />
+          <Route path="login" element={<Login onLogin={handleLogin} />}/>
+          <Route path="signup" element={<SignUp/>}/>
+          <Route path="show/:id" element={<Show />} />
         </Routes>
       </Layout>
     </Router>
