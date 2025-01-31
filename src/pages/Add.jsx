@@ -61,17 +61,21 @@ const Add = () => {
 
     // Отправляем данные
     try {
-      let response = await axios.post('http://yeticave-second.loc/add1.php', formData, {
+      let response = await axios.post('http://yeticave-second.loc/add.php', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
     });
       const {data, errors} = response.data;
-      if(Object.keys(errors).length > 0) {
+      if(errors) {
+        if(Object.keys(errors).length > 0) {
         setErrors(errors);
+      } 
       } else {
         console.log('Нет ошибок');
+        window.location.href="/";
       }
+      
     } catch(error ) {
       console.error('Error during the request:', error);
     };
