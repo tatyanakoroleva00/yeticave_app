@@ -124,8 +124,6 @@ const HomePage = ({ user }) => {
     const clickHandler = () => {
         window.location.href = '/history';
     };
-
-
     return (
         <section className="promo">
             <h2 className="promo__title">Нужен стафф для катки?</h2>
@@ -172,7 +170,12 @@ const HomePage = ({ user }) => {
                     <h2>{lotsStatus}</h2>
                 </div>
                 {lots.length === 0 && <b>{message}</b>}
-                <Lot lots={lots} />
+
+                <ul className="lots__list">
+                    {lots && lots.map((lot, index) => (
+                        <Lot lot = {lot} key={index} />))}
+                </ul>
+
             </section>
         </section >
     )

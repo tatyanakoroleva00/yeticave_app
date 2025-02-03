@@ -1,17 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Lot = ({ lots }) => {
+const Lot = ({ lot}) => {
   return (
-    <ul className="lots__list">
-      {lots && lots.map((lot, index) => (
-        <li key={index} className="lots__item lot">
+        <li className="lots__item lot">
           <div className="lot__image">
             <img src={lot['img_url']} width="350" height="260" alt={lot.name} />
           </div>
           <div className="lot__info">
             <span className="lot__category">{lot['category_name']}</span>
-            <h3 className="lot__title"><Link className="text-link" to=''>{lot.name}</Link></h3>
+            <h3 className="lot__title"><Link className="text-link" to={`show/${lot['id']}`}>{lot.name}</Link></h3>
             <p>Описание: {(lot['lot_message'].length > 100) ? lot['lot_message'].substring(0, 200) + "..." : lot['lot_message']}</p>
             <div className="lot__state">
               <div className="lot__rate">
@@ -23,8 +21,6 @@ const Lot = ({ lots }) => {
             </div>
           </div>
         </li>
-      ))}
-    </ul>
   )
 }
 

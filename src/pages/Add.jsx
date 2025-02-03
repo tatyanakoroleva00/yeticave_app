@@ -89,7 +89,7 @@ const Add = () => {
   };
   return (
     <>
-      <form onSubmit={handleSubmit} className={formClass} action="/add1.php" method="post">
+      <form onSubmit={handleSubmit} className={formClass} action="/add.php" method="post">
         <span className="form__error form__error--bottom">{Object.keys(errors).length > 0 ? 'Пожалуйста, исправьте ошибки в форме.' : ''}</span>
         <h2>Добавление лота</h2>
         <div className="form__container-two">
@@ -119,7 +119,7 @@ const Add = () => {
                 Разное
               </option>
             </select>
-            <span className="form__error">{errors.category ? 'Выберите категорию' : ''}</span>
+            <span className="form__error">{errors.category ?? ''}</span>
           </div>
         </div>
         {/* Описание */}
