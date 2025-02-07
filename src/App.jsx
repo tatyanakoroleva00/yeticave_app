@@ -28,7 +28,7 @@ function App() {
           <Route path="add" element={<Add />} />
           <Route path="login" element={<Login onLogin={handleLogin} />}/>
           <Route path="signup" element={<SignUp/>}/>
-          <Route path="show/:id" element={<Show />} />
+          <Route path="show/:id" element={<Show user={user} />} />
         </Routes>
       </Layout>
     </Router>
