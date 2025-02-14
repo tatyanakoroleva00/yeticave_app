@@ -106,7 +106,7 @@ const HomePage = ({ user }) => {
             lot_message: data[2],
             img_url: data[3],
             lot_rate: data[4],
-            lot_data: data[5],
+            lot_date: data[5],
             lot_step: data[6],
             price: data[7],
             cur_price: data[8],

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import Add from "./pages/Add";
+import History from "./pages/History";
 import { Show } from "./pages/Show";
 import Layout from "./components/Layout";
 import Login from "./pages/Login";
@@ -29,6 +30,7 @@ function App() {
           <Route path="login" element={<Login onLogin={handleLogin} />}/>
           <Route path="signup" element={<SignUp/>}/>
           <Route path="show/:id" element={<Show user={user} />} />
+          <Route path="history" element={<History />}/>
         </Routes>
       </Layout>
     </Router>
