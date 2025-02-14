@@ -5,7 +5,6 @@ import axios from 'axios';
 export const Show = ({ user }) => {
     const { id } = useParams();
     const [lot, setLot] = useState({
-
         lotName: '',
         category: '',
         lotMessage: '',
@@ -15,16 +14,20 @@ export const Show = ({ user }) => {
         curPrice: '',
         userName: '',
         email: '',
+        userId: '',
     });
     const [userLotRate, setUserLotRate] = useState(0);
-    const [lotExpired, setLotExpired] = useState(false);
+    const [islotExpired, setIsLotExpired] = useState(false);
+    const [errors, setErrors] = useState('');
+    const [ratesNumber, setRatesNumber] = useState(0);
+    const [rates, setRates] = useState([]);
 
+    // Вывод лота
     useEffect(() => {
-        axios.post('http://yeticave-second.loc/show_lot2.php',
+        axios.post('http://yeticave-second.loc/controllers/show_lot.php',
             { id })
             .then(response => {
                 const data = response.data;
-                console.log(data);
                 setLot(prev => ({
                     ...prev,
                     lotName: data['lot_name'],
@@ -35,11 +38,35 @@ export const Show = ({ user }) => {
                     lotDate: data['lot_date'],
                     curPrice: data['cur_price'],
                     userName: data.name,
+                    userId: data['user_id'],
                     email: data.email,
                 }));
-                getTheLotStatus(data['lot_date']);
+                let result = getTheLotStatus(data['lot_date']);
+
+                if(result > 0 || result == 0) setIsLotExpired(true);
+                if(result < 0) setIsLotExpired(false);
             }
             );
+    }, []);
+
+    //Вывод количества ставок
+    useEffect(() => {
+        axios.post('http://yeticave-second.loc/controllers/rates_number.php', {
+            lot_id: id,
+        })
+        .then(response => {
+            setRatesNumber(response.data);
+        })
+    }, []);
+
+    // Вывод истории ставок
+    useEffect(() => {
+        axios.post('http://yeticave-second.loc/controllers/rates_history.php', {
+            lot_id: id,
+        })
+        .then(response => {
+            setRates(response.data);
+        })
     }, []);
 
     function getTheLotStatus(value) {
@@ -54,22 +81,26 @@ export const Show = ({ user }) => {
         // Преобразуем миллисекунды в дни
         const millisecondsInADay = 1000 * 60 * 60 * 24;
         const differenceInDays = Math.floor(differenceInMilliseconds / millisecondsInADay);
-        console.log(differenceInDays);
-        // setLotStatus(differenceInDays);
-
-        if(differenceInDays > 0 || differenceInDays == 0) setLotExpired(true);
-        else setLotExpired(false);
+        return differenceInDays;
     }
 
     const sendUserLotRateHandler = (e) => {
         e.preventDefault();
 
-        axios.post('http://yeticave-second.loc/make_a_bid.php', {
-            id, userLotRate
+        axios.post('http://yeticave-second.loc/controllers/make_a_bid.php', {
+            lot_id: id, 
+            user_rate: userLotRate,
+            lot_step: lot.lotStep,
+            cur_price: lot.curPrice,
         })
-        .then(response => console.log(response.data));
+        .then(response => {
+            if(!response.data.errors) {
+                window.location.reload();
+            } else {
+                setErrors(response.data.errors.rate);
+            }
+        });
     };
-
 
     return (
         <section className="lot-item container">
@@ -91,37 +122,99 @@ export const Show = ({ user }) => {
                             <span>{lot.userName}, email: {lot.email}</span></p>
                     </div>
 
-
-
-                    {/* <?php if (isset($_SESSION['user']) && (strtotime($lot_date) > strtotime(date('Y-m-d')))) : ?> */}
-                    {/* <?php */}
-                    {/* # Если не текущий пользователь создал лот и дата истечения срока лота больше текущей */}
-                {/* if ($user_id != $_SESSION['user']['id']) :?> */}
-                {!lotExpired && 
+                {(user && +user.id != lot.userId) && !islotExpired && 
                     <div>
-                        <div class="lot-item__state">
-                            <form class="lot-item__form" action='' method="post" onSubmit={sendUserLotRateHandler}>
+                        <div className="lot-item__state">
+                            <form className="lot-item__form" action='' method="post" onSubmit={sendUserLotRateHandler}>
                                 <div>
-                                    <p class="rates__title">Добавить ставку</p>
-                                    <p class="lot-item__form-item form__item form__item--invalid">
-                                        <label for="cost">Ваша cумма:</label>
+                                    <p className="rates__title">Добавить ставку</p>
+                                    <p className="lot-item__form-item form__item form__item--invalid">
+                                        <label htmlFor="cost">Ваша cумма:</label>
                                         <input id="cost" type="text" name="lot_rate" placeholder="0"
                                             value={userLotRate} onChange={(e) => setUserLotRate(e.target.value)} />
                                     </p>
-                                    {/* <p style="color:red;"><?= $errors; ?></p> */}
+                                    <p style={{color: "red"}}>{errors}</p>
                                 </div>
                                 <div>
-                                    <button type="submit" class="button">Разместить ставку</button>
-                                    <div class="lot-item__min-cost">
+                                    <button type="submit" className="button">Разместить ставку</button>
+                                    <div className="lot-item__min-cost">
                                         Мин. шаг <span>{lot.lotStep}</span>
                                     </div>
                                 </div>
                             </form>
                         </div>
                     </div>}
-                    {/* <?php endif; ?> */}
-                    {/* <?php endif; ?> */}
                 </div>
+               {/* Right column */}
+        <div className="lot-col">
+            <h3>Информация торгов</h3>
+            {user && 
+                <h4><b><a href="/my_bets.php">Мои ставки тут</a></b></h4>}
+            <h4>Торги</h4>
+            <div>
+                <span className="lot-item__timer timer">{lot.lotDate}</span>
+                <div className="lot-item__cost-state">
+                    <div className="lot-item__rate">
+                        <span className="lot-item__amount">Текущая цена</span>
+                        <span className="lot-item__cost">{lot.curPrice}<b className="rub">р</b></span>
+                    </div>
+                </div>
+            </div>
+
+            <p>{`Общее количество ставок: ${ratesNumber}`}</p>
+
+            <h4>История торгов (<span>10</span>):</h4>
+            <table className="history__list">
+
+                {rates && rates.map((elem, index) => (
+
+
+                    islotExpired && index == 0 ? (
+                        <tr key={index} className='history__item winner'>
+                            <td >{elem.price}</td>
+                            <td >{elem['users_name']}</td>
+                            <td>{elem['rate_date']}</td>
+                            <td>Победитель!</td>
+                    </tr>)
+                : 
+                        (
+                        <tr key={index} className='history__item'>
+                            <td >{elem.price}</td>
+                            <td>{elem['users_name']}</td>
+                            <td>{elem['rate_date']}</td>
+                            <td></td>
+                    </tr>
+                        ) 
+                ))}
+                </table>
+
+
+                {/* <?php
+
+                    foreach ($result5 as $index => $row) {
+                        $dateLot = $row['rate_date'];
+                        $dateLot2 = humanReadableTimeDifference($row['rate_date']);
+
+                        if (strtotime($lot_date) < time() && ($index === 0)) {
+                            echo "<tr className='history__item winner'>
+                    <td className='history__name'>" . $row['price'] . "</td>
+                    <td className='history__price'>" . $row['lot_name'] . "</td>
+                    <td className='history__price'>" . $row['users_name'] . "</td>
+                    <td className='history__time'>" . "ПОБЕДИТЕЛЬ!" . "</td>
+                </tr>";
+                        } else {
+                            echo "<tr className='history__item'>
+                    <td className='history__name'>" . $row['price'] . "</td>
+                    <td className='history__price'>" . $row['lot_name'] . "</td>
+                    <td className='history__price'>" . $row['users_name'] . "</td>
+                    <td className='history__time'>" . $dateLot2 . "</td>
+                </tr>";
+                        }
+                    }
+                }
+                ?> */}
+            
+        </div>
             </div>
         </section>
 
