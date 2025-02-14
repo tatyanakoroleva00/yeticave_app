@@ -616,6 +616,12 @@
   .lot__info {
     padding: 22px 30px 30px;
   }
+  .lot__description {
+    display: flex;
+    height: 100px;
+    background-color: #e1e6e7;
+    padding: 10px;
+  }
   
   .lot__category {
     font-size: 13px;

@@ -10,15 +10,22 @@ const Lot = ({ lot}) => {
           <div className="lot__info">
             <span className="lot__category">{lot['category_name']}</span>
             <h3 className="lot__title"><Link className="text-link" to={`show/${lot['id']}`}>{lot.name}</Link></h3>
-            <p>Описание: {(lot['lot_message'].length > 100) ? lot['lot_message'].substring(0, 200) + "..." : lot['lot_message']}</p>
+            <div className='lot__description'>Описание: {(lot['lot_message'].length > 100) ? lot['lot_message'].substring(0, 200) + "..." : lot['lot_message']}</div>
             <div className="lot__state">
               <div className="lot__rate">
-                <span className="lot__amount">Стартовая цена</span>
+                <span className="lot__amount">Текущая цена</span>
                 <span className="lot__cost">{lot['cur_price']}<b className="rub">р</b></span>
               </div>
               <div className="lot__timer timer">{lot['lot_data']}{/* <?php echo formattedDate($elem['lot_date']);?> */}
               </div>
             </div>
+            {lot['cur_price'] != lot.price && 
+            (
+            <div className="lot__rate">
+                <span className="lot__amount">Стартовая цена</span>
+                <span className="lot__cost">{lot.price}<b className="rub">р</b></span>
+              </div>
+              )}
           </div>
         </li>
   )
