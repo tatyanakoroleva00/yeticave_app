@@ -33,7 +33,6 @@ const HomePage = ({ user }) => {
             'order': auctionFinishOrder,
         })
             .then(response => {
-                console.log(response.data);
                 let requestedLots = rangeLots(response.data);
                 setLots(requestedLots);
             })
@@ -101,7 +100,6 @@ const HomePage = ({ user }) => {
 
     // Function - ranging received from the server date - adding keys to values
     function rangeLots(incomeData) {
-        console.log(incomeData);
         return incomeData.map((data) => ({
             id: data[0],
             name: data[1],

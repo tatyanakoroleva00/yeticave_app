@@ -69,6 +69,7 @@ const Add = () => {
       }
     });
       const {errors, file, data, lotId} = response.data;
+      console.log(response.data);
       if(errors) {
         if(Object.keys(errors).length > 0) {
         setErrors(errors);

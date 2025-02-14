@@ -10,7 +10,8 @@ const Lot = ({ lot}) => {
           <div className="lot__info">
             <span className="lot__category">{lot['category_name']}</span>
             <h3 className="lot__title"><Link className="text-link" to={`show/${lot['id']}`}>{lot.name}</Link></h3>
-            <div className='lot__description'>Описание: {(lot['lot_message'].length > 100) ? lot['lot_message'].substring(0, 200) + "..." : lot['lot_message']}</div>
+            <div className='lot__description'>
+              Описание: {lot['lot_message'].length > 100 ? `${lot['lot_message'].slice(0, 100)}...` : lot['lot_message']}</div>
             <div className="lot__state">
               <div className="lot__rate">
                 <span className="lot__amount">Текущая цена</span>
