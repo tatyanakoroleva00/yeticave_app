@@ -51,7 +51,7 @@ export const Show = ({ user }) => {
 
     //Вывод количества ставок
     useEffect(() => {
-        axios.post('http://yeticave-second.loc/controllers/rates_number.php', {
+        axios.post('http://yeticave-second.loc/api/rates_number.php', {
             lot_id: id,
         })
         .then(response => {
@@ -61,7 +61,7 @@ export const Show = ({ user }) => {
 
     // Вывод истории ставок
     useEffect(() => {
-        axios.post('http://yeticave-second.loc/controllers/rates_history.php', {
+        axios.post('http://yeticave-second.loc/api/rates_history.php', {
             lot_id: id,
         })
         .then(response => {
@@ -165,10 +165,7 @@ export const Show = ({ user }) => {
 
             <h4>История торгов (<span>10</span>):</h4>
             <table className="history__list">
-
                 {rates && rates.map((elem, index) => (
-
-
                     islotExpired && index == 0 ? (
                         <tr key={index} className='history__item winner'>
                             <td >{elem.price}</td>
@@ -187,33 +184,6 @@ export const Show = ({ user }) => {
                         ) 
                 ))}
                 </table>
-
-
-                {/* <?php
-
-                    foreach ($result5 as $index => $row) {
-                        $dateLot = $row['rate_date'];
-                        $dateLot2 = humanReadableTimeDifference($row['rate_date']);
-
-                        if (strtotime($lot_date) < time() && ($index === 0)) {
-                            echo "<tr className='history__item winner'>
-                    <td className='history__name'>" . $row['price'] . "</td>
-                    <td className='history__price'>" . $row['lot_name'] . "</td>
-                    <td className='history__price'>" . $row['users_name'] . "</td>
-                    <td className='history__time'>" . "ПОБЕДИТЕЛЬ!" . "</td>
-                </tr>";
-                        } else {
-                            echo "<tr className='history__item'>
-                    <td className='history__name'>" . $row['price'] . "</td>
-                    <td className='history__price'>" . $row['lot_name'] . "</td>
-                    <td className='history__price'>" . $row['users_name'] . "</td>
-                    <td className='history__time'>" . $dateLot2 . "</td>
-                </tr>";
-                        }
-                    }
-                }
-                ?> */}
-            
         </div>
             </div>
         </section>
