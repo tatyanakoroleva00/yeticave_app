@@ -27,14 +27,12 @@ const HomePage = ({ user }) => {
         axios.get('/api/categories.php')
             // .then(({ data }) => setCategories(data.flat()))
             .then(({data} ) => {
-                console.log(data);
                 setCategories(data);
                 // setCategories(data.names.flat());
                 // setCategoriesEng(data['names_eng'].flat());
             }
             );
     }, []);
-    console.log(categories);
 
 
     // Show "new lots" when page is loaded for the first time
@@ -141,7 +139,7 @@ const HomePage = ({ user }) => {
             <ul className="promo__list">
                 {categories && categories.map((elem, index) => (
                     <li key={index} className="promo__item promo__item--boards">
-                        <Link to={`/category/${elem[2]}`} className="promo__link">{elem[1]}</Link>
+                        <Link to={`/lots_by_categories/${elem[2]}`} className="promo__link">{elem[1]}</Link>
                     </li>
                 ))}
             </ul>
@@ -182,7 +180,7 @@ const HomePage = ({ user }) => {
 
                 <ul className="lots__list">
                     {lots && lots.map((lot, index) => (
-                        <Lot lot = {lot} key={index} />))}
+                        <Lot key={index} lot = {lot} index={index} />))}
                 </ul>
 
             </section>

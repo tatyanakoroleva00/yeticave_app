@@ -32,7 +32,7 @@ function App() {
           <Route path="signup" element={<SignUp/>}/>
           <Route path="show/:id" element={<Show user={user} />} />
           <Route path="history" element={<History />}/>
-          <Route path="category/:category" element={<Category />}/>
+          <Route path="lots_by_categories/:category" element={<Category />}/>
         </Routes>
       </Layout>
     </Router>

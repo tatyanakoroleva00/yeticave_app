@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Lot = ({ lot, key}) => {
+const Lot = ({ lot, index}) => {
   return (
-        <li key={key} className="lots__item lot">
+        <li key={lot+index} className="lots__item lot">
           <div className="lot__image">
             <img src={lot['img_url']} width="350" height="260" alt={lot.name} />
           </div>
