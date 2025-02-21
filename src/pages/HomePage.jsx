@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import Lot from "./Lot";
-import { useNavigate } from "react-router-dom";
 
 const HomePage = ({ user }) => {
     const [categories, setCategories] = useState(null);
+    const [categoriesEng, setCategoriesEng] = useState(null);
     const [lotsStatus, setLotsStatus] = useState('Открытые');
     const [minPrice, setMinPrice] = useState(0);
     const [maxPrice, setMaxPrice] = useState(0);
@@ -22,16 +22,20 @@ const HomePage = ({ user }) => {
     const classNameAuction = `sort-button ${nextAuctionFinishOrder}`;
     const classNamePublication = `sort-button ${nextPublicationOrder}`;
 
-    const navigate = useNavigate();
-    const handleCategoryClick = (category) => {
-        navigate(`/category/${category}`);
-    };
-
     // All Categories request
     useEffect(() => {
         axios.get('/api/categories.php')
-            .then(({ data }) => setCategories(data.flat()))
+            // .then(({ data }) => setCategories(data.flat()))
+            .then(({data} ) => {
+                console.log(data);
+                setCategories(data);
+                // setCategories(data.names.flat());
+                // setCategoriesEng(data['names_eng'].flat());
+            }
+            );
     }, []);
+    console.log(categories);
+
 
     // Show "new lots" when page is loaded for the first time
     useEffect(() => {
@@ -137,7 +141,7 @@ const HomePage = ({ user }) => {
             <ul className="promo__list">
                 {categories && categories.map((elem, index) => (
                     <li key={index} className="promo__item promo__item--boards">
-                        <Link onClick={() => handleCategoryClick(elem)} className="promo__link">{elem}</Link>
+                        <Link to={`/category/${elem[2]}`} className="promo__link">{elem[1]}</Link>
                     </li>
                 ))}
             </ul>
