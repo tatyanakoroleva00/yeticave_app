@@ -8,16 +8,13 @@ const Category = () => {
   const { category } = useParams();
   const [lots, setLots] = useState([]);
 
-
   useEffect(() => {
     axios.post(`/api/lots_by_categories.php`, { category })
       .then(response => {
-        // console.log(response.data);
-        setLots(response.data);
+        let data = response.data;
+        setLots(data);
       })
-      .catch(error => {
-        console.error('Ошибка', error);
-      });
+      
   }, [category]);
 
   return (
