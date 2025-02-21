@@ -17,7 +17,7 @@ const Lot = ({ lot, key}) => {
                 <span className="lot__amount">Текущая цена</span>
                 <span className="lot__cost">{lot['cur_price']}<b className="rub">р</b></span>
               </div>
-              <div className="lot__timer timer">{lot['lot_date']}{/* <?php echo formattedDate($elem['lot_date']);?> */}
+              <div className="lot__timer timer">{lot['lot_date']}
               </div>
             </div>
             {lot['cur_price'] != lot.price && 

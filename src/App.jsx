@@ -8,6 +8,7 @@ import { Show } from "./pages/Show";
 import Layout from "./components/Layout";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import Category from "./pages/Category";
 import axios from "axios";
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
           <Route path="signup" element={<SignUp/>}/>
           <Route path="show/:id" element={<Show user={user} />} />
           <Route path="history" element={<History />}/>
+          <Route path="category/:category" element={<Category />}/>
         </Routes>
       </Layout>
     </Router>

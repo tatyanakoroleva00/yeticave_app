@@ -71,6 +71,7 @@ const Add = () => {
       const {errors, file, data, lotId} = response.data;
       console.log(response.data);
       if(errors) {
+        console.log(data);
         if(Object.keys(errors).length > 0) {
         setErrors(errors);
       } 
@@ -85,7 +86,7 @@ const Add = () => {
 
   const handleRemoveFile = (e) => {
     e.preventDefault;
-    setFormValues(prev => ({...prev, lotImage : null}));
+    setFormValues(prev => ({...prev, lotImage : ''}));
     setPreview(null);
   };
   return (

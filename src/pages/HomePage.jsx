@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import Lot from "./Lot";
+import { useNavigate } from "react-router-dom";
+
 const HomePage = ({ user }) => {
     const [categories, setCategories] = useState(null);
     const [lotsStatus, setLotsStatus] = useState('Открытые');
@@ -19,6 +21,11 @@ const HomePage = ({ user }) => {
     const nextPublicationOrder = publicationOrder === 'asc' ? 'desc' : 'asc';
     const classNameAuction = `sort-button ${nextAuctionFinishOrder}`;
     const classNamePublication = `sort-button ${nextPublicationOrder}`;
+
+    const navigate = useNavigate();
+    const handleCategoryClick = (category) => {
+        navigate(`/category/${category}`);
+    };
 
     // All Categories request
     useEffect(() => {
@@ -130,7 +137,7 @@ const HomePage = ({ user }) => {
             <ul className="promo__list">
                 {categories && categories.map((elem, index) => (
                     <li key={index} className="promo__item promo__item--boards">
-                        <Link className="promo__link" to={elem}>{elem}</Link>
+                        <Link onClick={() => handleCategoryClick(elem)} className="promo__link">{elem}</Link>
                     </li>
                 ))}
             </ul>
