@@ -1,11 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 
-const Lot = ({ lot, index}) => {
+const Lot = ({ lot, index, showThumbnail, scale}) => {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
         <li key={lot+index} className="lots__item lot">
-          <div className="lot__image">
-            <img src={lot['img_url']} width="350" height="260" alt={lot.name} />
+          <div width="350" height="260" className="lot__image" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} >
+            <img  src={!isHovered && showThumbnail && lot['thumb_pic'] ? lot['thumb_pic'] : lot['img_url']} alt={lot.name}
+            style={{cursor : isHovered ? 'pointer' : 'default', width: isHovered ? '400px' : '100%', height : isHovered ? '400px' : '100%', position: isHovered ? 'absolute' : 'relative', zIndex : isHovered ? '1000' : '0' }}
+            />
           </div>
           <div className="lot__info">
             <span className="lot__category">{lot['category_name']}</span>

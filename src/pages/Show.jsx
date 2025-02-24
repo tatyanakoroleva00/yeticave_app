@@ -8,7 +8,7 @@ export const Show = ({ user }) => {
         lotName: '',
         category: '',
         lotMessage: '',
-        lotImage: '',
+        img_url: '',
         lotStep: '',
         lotDate: '',
         curPrice: '',
@@ -33,7 +33,7 @@ export const Show = ({ user }) => {
                     lotName: data['lot_name'],
                     category: data['category_name'],
                     lotMessage: data['lot_message'],
-                    lotImage: data['img_url'],
+                    img_url: data['img_url'],
                     lotStep: data['lot_step'],
                     lotDate: data['lot_date'],
                     curPrice: data['cur_price'],
@@ -110,7 +110,7 @@ export const Show = ({ user }) => {
                 <div className="lot-col left">
                     <div className="description">
                         <div className="lot-item__image">
-                            <img src={lot.lotImage} width="730" height="548" alt={lot.lotName} />
+                            <img src={lot['img_url']} width="730" height="548" alt={lot.lotName} />
                         </div>
                         <p className="lot-item__name"><b style={{ fontSize: '14px' }}>Наименование:&nbsp;</b> <span>{lot.lotName}</span>
                         </p>

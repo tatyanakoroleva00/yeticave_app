@@ -71,16 +71,16 @@ const Add = () => {
       const {errors, file, data, lotId} = response.data;
       console.log(response.data);
       if(errors) {
-        console.log(data);
+        // console.log(data);
         if(Object.keys(errors).length > 0) {
         setErrors(errors);
       } 
       } else {
-        console.log(lotId);
+        // console.log(lotId);
         navigate(`/show/${lotId}`);
       }
     } catch(error ) {
-      console.error('Error during the request:', error);
+      // console.error('Error during the request:', error);
     };
   };
 

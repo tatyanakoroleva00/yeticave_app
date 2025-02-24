@@ -6,7 +6,6 @@ import Lot from "./Lot";
 
 const HomePage = ({ user }) => {
     const [categories, setCategories] = useState(null);
-    const [categoriesEng, setCategoriesEng] = useState(null);
     const [lotsStatus, setLotsStatus] = useState('Открытые');
     const [minPrice, setMinPrice] = useState(0);
     const [maxPrice, setMaxPrice] = useState(0);
@@ -111,12 +110,13 @@ const HomePage = ({ user }) => {
             name: data[1],
             lot_message: data[2],
             img_url: data[3],
-            lot_rate: data[4],
-            lot_date: data[5],
-            lot_step: data[6],
-            price: data[7],
-            cur_price: data[8],
-            category_name: data[9],
+            thumb_pic: data[4],
+            lot_rate: data[5],
+            lot_date: data[6],
+            lot_step: data[7],
+            price: data[8],
+            cur_price: data[9],
+            category_name: data[10],
         }));
     }
     // Refresh prices on reset button 
@@ -177,7 +177,7 @@ const HomePage = ({ user }) => {
 
                 <ul className="lots__list">
                     {lots && lots.map((lot, index) => (
-                        <Lot key={index} lot = {lot} index={index} />))}
+                        <Lot key={index} lot = {lot} index={index} showThumbnail={true} scale={true}/>))}
                 </ul>
 
             </section>

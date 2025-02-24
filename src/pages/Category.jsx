@@ -19,7 +19,7 @@ const Category = () => {
 
   return (
     <div>
-      <h1>{`Лоты в категории "${lots && lots.length > 0 ? lots[0]['name'] : ''}"`}</h1>
+      <h1>{`Лоты в категории "${lots && lots.length > 0 ? lots[0]['category_name'] : ''}"`}</h1>
       <ul className="lots__list">
         {lots && lots.map((lot, index) => (
           <Lot key={index} lot={lot} index={index} />

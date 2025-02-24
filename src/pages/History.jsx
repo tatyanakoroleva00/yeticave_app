@@ -8,7 +8,7 @@ const History = () => {
   useEffect(() => {
     axios.get('api/history.php')
       .then(response => {
-        console.log(response.data); // Предполагаем, что ответ содержит данные в поле `data`
+        // console.log(response.data); // Предполагаем, что ответ содержит данные в поле `data`
         setLots(response.data);
       })
       .catch(error => {
@@ -21,7 +21,7 @@ const History = () => {
       {lots.length == 0 && <h2>Нет просмотренных лотов</h2>}
       <ul className="lots__list">
       {lots && lots.map((elem, index) => (
-        <Lot key={index} lot={elem} />))}
+        <Lot key={index} lot={elem} showThumbnail={true} />))}
         </ul>
     </section>
   )
