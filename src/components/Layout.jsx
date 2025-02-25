@@ -6,8 +6,8 @@ const Layout = ({children, user, setUser}) => {
   return (
     <div className="page-wrapper">
         <Header user={user} setUser={setUser}/>
-        <main>{children}</main>
-        <Footer/>
+        <main className="container">{children}</main>
+        <Footer user={user} setUser={setUser}/>
     </div>
   )
 }
