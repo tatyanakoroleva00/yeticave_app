@@ -2,9 +2,11 @@ import React from 'react';
 import { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Header = ({ user, setUser }) => {
     const [searchInput, setSearchInput] = useState('');
+    const navigate = useNavigate();
     const handleLogout = () => {
         axios.get('/controllers/logout.php')
             .then(() => {
@@ -12,6 +14,10 @@ const Header = ({ user, setUser }) => {
                 setUser(null);
             });
     };
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        navigate(`search?query=${encodeURIComponent(searchInput)}`);
+    }
 
     return (
         <header className="main-header">
@@ -20,8 +26,8 @@ const Header = ({ user, setUser }) => {
                 <Link className="main-header__logo" to="/">
                     <img src="/img/avatars/logo.svg" width="160" height="39" alt="Логотип компании YetiCave" />
                 </Link>
-                <form className="main-header__search" method="get" action="search.php" autoComplete="off">
-                    <input type="search" className="search" placeholder="Поиск лота" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} />
+                <form className="main-header__search" autoComplete="off" onSubmit={handleSubmit}>
+                    <input type="search" placeholder="Поиск лота" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} />
                     <input className="main-header__search-btn" type="submit" name="find" value="Найти" />
                 </form>
                 {user &&

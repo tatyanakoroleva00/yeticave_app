@@ -1,118 +1,118 @@
 /* Шрифты */
 
 @font-face {
-    font-family: "Open Sans";
-    src: url("../fonts/opensans-regular.woff2") format("woff2"), url("../fonts/opensans-regular.woff") format("woff");
-    font-style: normal;
-    font-weight: 400;
-  }
-  
-  @font-face {
-    font-family: "Open Sans";
-    src: url("../fonts/opensans-bold.woff2") format("woff2"), url("../fonts/opensans-bold.woff") format("woff");
-    font-style: normal;
-    font-weight: 700;
-  }
-  
-  @font-face {
-    font-family: "PT Sans";
-    src: url("../fonts/ptsans.woff2") format("woff2"), url("../fonts/ptsans.woff") format("woff");
-    font-style: normal;
-    font-weight: 400;
-  }
-  
-  @font-face {
-    font-family: "PT Sans";
-    src: url("../fonts/ptsansbold.woff2") format("woff2"), url("../fonts/ptsansbold.woff") format("woff");
-    font-style: normal;
-    font-weight: 700;
-  }
-  
-  /* Общее */
-  
-  html,
-  body {
-    height: 100%;
-  }
-  
-  .page-wrapper {
-    display: flex;
-    flex-direction: column;
-    min-height: 100%;
-    margin-bottom: -202px;
-  }
-  
-  .page-wrapper::after {
-    content: "";
-  
-    display: block;
-  }
-  
-  .page-wrapper::after {
-    height: 85px;
-  }
-  
-  main {
-    margin-bottom: 202px;
-  }
-  
-  body {
-    min-width: 1140px;
-    background-color: #dbe6e9;
-    font-family: "PT Sans", sans-serif;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 26px;
-    color: #25434e;
-  }
-  
-  a {
-    text-decoration: none;
-  }
-  
-  h2 {
-    margin: 0;
-    font-family: "Open Sans", sans-serif;
-    font-size: 28px;
-    line-height: 35px;
-    font-weight: 700;
-  }
-  
-  .text-link {
-    font-weight: 700;
-    color: #45abde;
-  }
-  
-  .text-link:hover {
-    text-decoration: underline;
-  }
-  
-  .text-link:active {
-    color: #2590c6;
-  }
-  
-  .visually-hidden:not(:focus):not(:active),
-  input.visually-hidden {
-    position: absolute;
-  
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    border: 0;
-    padding: 0;
-  
-    white-space: nowrap;
-  
-    clip-path: inset(100%);
-    clip: rect(0 0 0 0);
-    overflow: hidden;
-  }
-  
-  .container {
-    width: 1110px;
-    margin: 0 auto;
-    padding: 0 15px;
-  }
+  font-family: "Open Sans";
+  src: url("../fonts/opensans-regular.woff2") format("woff2"), url("../fonts/opensans-regular.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Open Sans";
+  src: url("../fonts/opensans-bold.woff2") format("woff2"), url("../fonts/opensans-bold.woff") format("woff");
+  font-style: normal;
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "PT Sans";
+  src: url("../fonts/ptsans.woff2") format("woff2"), url("../fonts/ptsans.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "PT Sans";
+  src: url("../fonts/ptsansbold.woff2") format("woff2"), url("../fonts/ptsansbold.woff") format("woff");
+  font-style: normal;
+  font-weight: 700;
+}
+
+/* Общее */
+
+html,
+body {
+  height: 100%;
+}
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  margin-bottom: -202px;
+}
+
+.page-wrapper::after {
+  content: "";
+
+  display: block;
+}
+
+.page-wrapper::after {
+  height: 85px;
+}
+
+main {
+  margin-bottom: 202px;
+}
+
+body {
+  min-width: 1140px;
+  background-color: #dbe6e9;
+  font-family: "PT Sans", sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 26px;
+  color: #25434e;
+}
+
+a {
+  text-decoration: none;
+}
+
+h2 {
+  margin: 0;
+  font-family: "Open Sans", sans-serif;
+  font-size: 28px;
+  line-height: 35px;
+  font-weight: 700;
+}
+
+.text-link {
+  font-weight: 700;
+  color: #45abde;
+}
+
+.text-link:hover {
+  text-decoration: underline;
+}
+
+.text-link:active {
+  color: #2590c6;
+}
+
+.visually-hidden:not(:focus):not(:active),
+input.visually-hidden {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+
+  white-space: nowrap;
+
+  clip-path: inset(100%);
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+
+.container {
+  width: 1110px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
   
   main.container {
     margin-bottom: 202px;
@@ -182,7 +182,7 @@
   
   .main-header__search input[type="search"] {
     width: 100%;
-    padding: 8px 19px 9px 19px;
+    padding: 15px 19px 15px 19px;
     border: 1px solid #ffffff;
   }
   
@@ -194,14 +194,21 @@
     content: "";
     position: absolute;
     top: 3px;
-    right: 3px;
+    right: 2px;
     width: 20px;
     height: 20px;
     padding: 20px;
-    background: url("src/assets/images/search.svg") center no-repeat;
+    background: url("img/search.svg") center no-repeat;
     opacity: 0.3;
     border: 0;
     font-size: 0;
+  }
+  
+  input[type="search"]::-webkit-search-decoration,
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-results-button,
+  input[type="search"]::-webkit-search-results-decoration {
+  -webkit-appearance:none;
   }
   
   .main-header__search-btn:hover {

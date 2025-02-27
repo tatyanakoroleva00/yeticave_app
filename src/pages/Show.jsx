@@ -2,6 +2,7 @@ import React from 'react'
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 export const Show = ({ user }) => {
     const { id } = useParams();
     const [lot, setLot] = useState({
@@ -149,7 +150,9 @@ export const Show = ({ user }) => {
         <div className="lot-col">
             <h3>Информация торгов</h3>
             {user && 
-                <h4><b><a href="/my_bets.php">Мои ставки тут</a></b></h4>}
+                <h4><b>
+                    <Link to="/mybets">Мои ставки тут</Link>
+                </b></h4>}
             <h4>Торги</h4>
             <div>
                 <span className="lot-item__timer timer">{lot.lotDate}</span>
