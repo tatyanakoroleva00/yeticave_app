@@ -27,6 +27,8 @@ const Login = ({ onLogin }) => {
     }
   };
 
+  console.log(errors);
+
   return (
     <form className="form container" method="post" onSubmit={handleSubmit}>
       {errors.message && <span class="form__error" >{errors.message}</span>}

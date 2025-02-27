@@ -8,8 +8,8 @@ const SignUp = () => {
   const [formValues, setFormValues] = useState({
     email: '',
     password: '',
-    name: '',
     avatar: '',
+    name: '',
     message: '',
   });
   const [preview, setPreview] = useState(null);
@@ -17,62 +17,92 @@ const SignUp = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormValues((prevFormValues) => ({ ...prevFormValues, [name]: value }));
+    setFormValues(prevFormValues => ({ ...prevFormValues, [name]: value }));
   };
 
+  // Обработка выбора файла
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormValues(prev => ({ ...prev, avatar: file }));
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
+    setErrors({});
+
+    const { email, password, avatar, name, message } = formValues;
     e.preventDefault();
-    try {
-      const response = await axios.post('http://yeticave-second.loc/sign_up2.php', {
-        email, password, name, avatar, message
-      });
-      // let data = response.data;
-      const { data, errors } = response.data;
-      console.log(data);
-      console.log(errors);
-      if (errors) setErrors;
-      if (data.status === 'success') {
-        // window.location.href='/login';
-      } else {
-        setErrors(data.errors);
+    setErrors({}); // Очищаем ошибки перед отправкой формы
+
+    axios.post('http://yeticave-second.loc/sign_up2.php', {
+      email, password, avatar, name, message,
+    }, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
       }
-    }
-    catch (error) {
-      console.log('This is an error: ', error);
-    }
-  }
+    })
+      .then(response => {
+        const { data, errors } = response.data;
+        if (errors) {
+          // console.log(data);
+          if (Object.keys(errors).length > 0) {
+            setErrors(errors);
+          }
+        }
+        setFormValues(data);
+        console.log(data);
+        console.log(errors);
+      })
+  };
+
+  const handleRemoveFile = (e) => {
+    e.preventDefault;
+    setFormValues(prev => ({...prev, lotImage : ''}));
+    setPreview(null);
+  };
 
   return (
-    <form className="form container form--invalid" method="post" encType="multipart/form-data" onSubmit={handleSubmit}>
-      <span className="form__error form__error--bottom">{Object.keys(errors).length > 0 ? 'Пожалуйста, исправьте ошибки в форме.' : ''}</span>
+    <form className="form container form--invalid" encType="multipart/form-data" onSubmit={handleSubmit}>
+      <span className="form__error form__error--bottom">
+        {Object.keys(errors).length > 0 ? 'Пожалуйста, исправьте ошибки в форме.' : ''}</span>
       <h2>Регистрация нового аккаунта</h2>
       <div className="form__item">
         <label htmlFor="email">E-mail <sup>*</sup></label>
         <input id="email" type="text" name="email" onChange={handleInputChange} placeholder="Введите e-mail" value={formValues.email} />
-        <span className="form__error">{errors.email ? errors.email : ''}</span>
+        {errors.email && <span className="form__error">{errors.email}</span>}
       </div>
       <div className="form__item">
         <label htmlFor="password">Пароль <sup>*</sup></label>
         <input id="password" type="password" name="password" onChange={handleInputChange} placeholder="Введите пароль" value={formValues.password} />
-        {/* <span className="form__error"><?=$errors['password'] ?? ''?></span> */}
+        {errors.password && <span className="form__error">{errors.password}</span>}
       </div>
       <div className="form__item">
         <label htmlFor="name">Имя <sup>*</sup></label>
-        <input id="name" type="text" name="name" onChange={handleInputChange} placeholder="Введите имя" value={formValues.name}/>
-        {/* <span className="form__error"><?=$errors['name'] ?? ''?></span> */}
+        <input id="name" type="text" name="name" onChange={handleInputChange} placeholder="Введите имя" value={formValues.name} />
+        {errors.name && <span className="form__error">{errors.name}</span>}
       </div>
       <div>
-        <label>Аватар</label>
+        <label>Аватар <sup>*</sup></label>
         <div className="form__input-file">
-          <input type="file" id="avatar" name="avatar" onChange={handleInputChange} value={formValues.avatar} />
-          {/* <span className="form__error"><?=$errors['image'] ?? ''?></span> */}
+          {preview && (
+            <>
+              <img src={preview} alt="Загруженное изображение" width="100px " />
+              <button className="remove-button" onClick={handleRemoveFile}>УДАЛИТЬ</button>
+            </>)}
+            {!preview && <input type="file" onChange={handleFileChange} id="lot_img" name="lotImage" />}
+          {errors.avatar && <span className="form__error">{errors.avatar}</span>}
         </div>
       </div>
       <div className="form__item">
         <label htmlFor="message">Контактные данные <sup>*</sup></label>
-        <textarea id="message" name="message" placeholder="Напишите как с вами связаться" value={formValues.message} onChange={handleInputChange}></textarea>
-        {/* <span className="form__error"><?=$errors['message'] ?? ''?></span> */}
+        <textarea id="message" name="message" placeholder="Напишите как с вами связаться" value={formValues.message} onChange={handleInputChange} ></textarea>
+        {errors.message && <span className="form__error">{errors.message}</span>}
       </div>
       <button type="submit" className="button">Зарегистрироваться</button>
       <Link className="text-link" to="/login?>">Уже есть аккаунт</Link>
