@@ -15,16 +15,16 @@ const MyBets = () => {
       })
   }, []);
 
-  console.log(bets);
-
   return (
     <>
       <section className="rates container">
         <h2>Мои ставки {bets ? `(${bets.length})` : ''}</h2>
+        {!bets && <p>Пока нет ставок.</p>}
         <table className="rates__list">
           <thead>
           </thead>
           <tbody>
+            
             {bets && bets.map((elem, index) => {
               let date = new Date();
               let curTime = date.getTime();
@@ -42,7 +42,7 @@ const MyBets = () => {
                         <img src={bets[index]['img_url']} width="54" height="40" alt={elem['lot_name']} />
                       </div>
                       <div>
-                        <h3 className="rates__title"><Link className="text-link" to={`http://yeticave-second.loc/show/${elem['lot_id']}`}></Link></h3>
+                        <h3 className="rates__title"><Link className="text-link" to={`http://yeticave-second.loc/show/${elem['lot_id']}`}>{elem['lot_name']}</Link></h3>
                         <p>{elem['lot_message']}</p>
                       </div>
                     </td>

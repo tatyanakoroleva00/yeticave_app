@@ -85,7 +85,7 @@ const Add = () => {
   };
 
   const handleRemoveFile = (e) => {
-    e.preventDefault;
+    e.preventDefault();
     setFormValues(prev => ({...prev, lotImage : ''}));
     setPreview(null);
   };

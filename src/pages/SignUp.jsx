@@ -15,6 +15,7 @@ const SignUp = () => {
   const [preview, setPreview] = useState(null);
   const [errors, setErrors] = useState({});
 
+  console.log(formValues);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormValues(prevFormValues => ({ ...prevFormValues, [name]: value }));
@@ -48,22 +49,31 @@ const SignUp = () => {
       }
     })
       .then(response => {
-        const { data, errors } = response.data;
+        const {errors, data, status, message, file} = response.data;
+        console.log(data);
+        console.log(status);
+        console.log(response);
         if (errors) {
           // console.log(data);
           if (Object.keys(errors).length > 0) {
             setErrors(errors);
           }
         }
-        setFormValues(data);
-        console.log(data);
-        console.log(errors);
-      })
-  };
+        if (status === 'success') {
+          alert('Успешная регистрация!');
+          window.location.href = '/login';
+        }
+
+
+      }) // This parenthesis and curly brace were missing
+      .catch(error => {
+        console.error("There was an error!", error);
+      });
+};
 
   const handleRemoveFile = (e) => {
-    e.preventDefault;
-    setFormValues(prev => ({...prev, lotImage : ''}));
+    e.preventDefault();
+    setFormValues(prev => ({...prev, avatar : ''}));
     setPreview(null);
   };
 
@@ -95,7 +105,7 @@ const SignUp = () => {
               <img src={preview} alt="Загруженное изображение" width="100px " />
               <button className="remove-button" onClick={handleRemoveFile}>УДАЛИТЬ</button>
             </>)}
-            {!preview && <input type="file" onChange={handleFileChange} id="lot_img" name="lotImage" />}
+            {!preview && <input type="file" onChange={handleFileChange} id="lot_img" name="avatar" />}
           {errors.avatar && <span className="form__error">{errors.avatar}</span>}
         </div>
       </div>
@@ -105,7 +115,7 @@ const SignUp = () => {
         {errors.message && <span className="form__error">{errors.message}</span>}
       </div>
       <button type="submit" className="button">Зарегистрироваться</button>
-      <Link className="text-link" to="/login?>">Уже есть аккаунт</Link>
+      <Link className="text-link" to="/login">Уже есть аккаунт</Link>
     </form>
   )
 }

@@ -94,7 +94,7 @@ const HomePage = ({ user }) => {
                 .then(response => {
                     let requestedLots = response.data;
                     if (requestedLots.length === 0) {
-                        setMessage('Nothing is found');
+                        setMessage('Ничего не найдено');
                         setLots([]);
                     } else {
                         requestedLots = rangeLots(requestedLots);
